@@ -1,0 +1,32 @@
+# To build:-
+#   docker build -f Dockerfile -t mas2.vsysoffice.net:5000/demo/vibration:v1 .
+#   docker push mas2.vsysoffice.net:5000/demo/vibration:v1
+# To view graph
+#   http://<IP addr>:8088/graph.html
+
+FROM arm32v7/node:10.12.0-slim
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+COPY bin/qemu-arm-static /usr/bin/
+
+RUN mkdir /home/user
+WORKDIR /home/user
+
+RUN chmod +x /usr/bin/qemu-arm-static \
+    && apt-get update \
+    && apt-get install -y pm-utils libusb-1.0-0 libudev-dev
+
+COPY sensors/tinkerforge/brickd-2.3.2_armhf.deb /brickd-2.3.2_armhf.deb
+RUN dpkg -i /brickd-2.3.2_armhf.deb && rm /brickd-2.3.2_armhf.deb
+
+COPY sensors/tinkerforge/temperature/javascript/src/ /home/user/
+RUN ls -l /home/user
+COPY sensors/tinkerforge/temperature/javascript/entrypoint.sh /usr/local/bin/
+
+# TCP port for access to brickd (using API bindings or brick viewer)
+EXPOSE 4223 8088
+
+ENV WEB_LISTEN_PORT=8088
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

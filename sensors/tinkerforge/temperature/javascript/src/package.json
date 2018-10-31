@@ -1,0 +1,16 @@
+{
+  "name": "tinkerforgetempsensor",
+  "version": "0.0.0",
+  "description": "",
+  "main": "tftemp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "tinkerforge": "^2.1.20"
+  }
+}

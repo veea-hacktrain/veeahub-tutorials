@@ -1,0 +1,47 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>NodeJS Temperature Example</title>
+    <meta name="description" content="NodeJS Temperature Example">
+    <meta name="author" content="Veea Systems">
+
+    <style>
+        body {
+            font-family: 'Ubuntu', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        #centered {
+            width:50%;
+            margin:0px auto;
+        }
+        #graphouter {
+            border: 1px solid #cccccc;
+            padding:5px 20px 5px 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="centered">
+    <h1>Temperature Bricklet Example</h1>
+    <p>
+        This is the Veea Systems Temperature Bricklet Example written in NodeJS.
+    </p>
+    <p>
+        The graph is rendered by connecting to an Express JS server running on
+        the VeeaHub. The Express JS server is collecting temperatures from the
+        bricklets in the background.
+    </p>
+    <div id="graphouter">
+        <div id="graph"></div>
+    </div>
+    </div>
+    <script src="/static/plotly-v1.41.3.min.js"></script>
+    <script src="/static/sensors.js"></script>
+</body>
+
+</html>
