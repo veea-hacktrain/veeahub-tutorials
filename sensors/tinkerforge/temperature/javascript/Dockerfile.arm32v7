@@ -1,25 +1,32 @@
 # To build:-
-#   docker build -f Dockerfile -t mas2.vsysoffice.net:5000/demo/vibration:v1 .
-#   docker push mas2.vsysoffice.net:5000/demo/vibration:v1
+#   docker build -f Dockerfile -t 10.0.0.1/harry/tftemp-js:0.0.1 .
+#   docker push 10.0.0.1/harry/tftemp-js:0.0.1
 # To view graph
-#   http://<IP addr>:8088/graph.html
+#   http://<IP addr>:8088/
 
+# Start with the ARM32v7 base container which has NodeJS installed
 FROM arm32v7/node:10.12.0-slim
 
+# Set this to stop apt from prompting
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Copy over qemu so that we can build this arm32v7 container on an x86 machine
 COPY bin/qemu-arm-static /usr/bin/
 
+# Make some folders for the user
 RUN mkdir /home/user
 WORKDIR /home/user
 
+# Install some dependencies for brickd
 RUN chmod +x /usr/bin/qemu-arm-static \
     && apt-get update \
     && apt-get install -y pm-utils libusb-1.0-0 libudev-dev
 
+# Install brickd
 COPY sensors/tinkerforge/brickd-2.3.2_armhf.deb /brickd-2.3.2_armhf.deb
 RUN dpkg -i /brickd-2.3.2_armhf.deb && rm /brickd-2.3.2_armhf.deb
 
+# Copy our code over to the correct directory
 COPY sensors/tinkerforge/temperature/javascript/src/ /home/user/
 RUN ls -l /home/user
 COPY sensors/tinkerforge/temperature/javascript/entrypoint.sh /usr/local/bin/
@@ -27,6 +34,9 @@ COPY sensors/tinkerforge/temperature/javascript/entrypoint.sh /usr/local/bin/
 # TCP port for access to brickd (using API bindings or brick viewer)
 EXPOSE 4223 8088
 
+# This container will pass the WEB_LISTEN_PORT into the container where the
+# NodeJS application will pick it up.
 ENV WEB_LISTEN_PORT=8088
 
+# When the container starts it will run this script.
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
