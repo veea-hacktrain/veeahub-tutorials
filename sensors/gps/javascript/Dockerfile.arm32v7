@@ -1,0 +1,22 @@
+# To build:-
+#   docker build -f Dockerfile -t 10.0.0.1/harry/gps-js:0.0.1 .
+#   docker push 10.0.0.1/harry/gps-js:0.0.1
+# To view graph
+#   http://<IP addr>:8088/
+
+# Start with the ARM32v7 base container which has NodeJS installed
+FROM arm32v7/node:10.12.0-slim
+
+# Copy our code over to the correct directory
+COPY sensors/gps/javascript/src/ /home/user/
+
+WORKDIR /home/user/
+
+EXPOSE 8088
+
+# This container will pass the WEB_LISTEN_PORT into the container where the
+# NodeJS application will pick it up.
+ENV WEB_LISTEN_PORT=8088
+
+# When the container starts it will run this script.
+ENTRYPOINT ["node", "/home/user/gps.js"]

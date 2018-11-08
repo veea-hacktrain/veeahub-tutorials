@@ -1,0 +1,70 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>NodeJS Location Example</title>
+    <meta name="description" content="NodeJS Location Example">
+    <meta name="author" content="Veea Systems">
+
+    <style>
+        body {
+            font-family: 'Ubuntu', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        #centered {
+            width:50%;
+            margin:0px auto;
+        }
+        #graphouter {
+            border: 1px solid #cccccc;
+            padding:5px 20px 5px 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="centered">
+    <h1>Location Example</h1>
+    <p>
+        This is the Veea Systems Location Example written in JavaScript.
+    </p>
+    <p>
+        We are reading from the "MyNode" service which is normally available
+        from the VeeaHub App Store (free). It listens on port 5666. If a GPS
+        unit is plugged into the unit it will try to find the position.
+    </p>
+    <p>
+        In addition to this MyNode will also tell you about other VeeaHubs in
+        its Mesh (MyNode doesn't have to be present on the other nodes)
+    </p>
+    <p>Here's what we've found</p>
+    <div id="graphouter">
+        <dl>
+            <dt>Latitude</dt>
+            <dd id="lat"></dd>
+            <dt>Longitude</dt>
+            <dd id="lng"></dd>
+            <dt>Altitude</dt>
+            <dd id="alt"></dd>
+            <dt>Neighbours</dt>
+            <dd id="neighbours"></dd>
+        </div>
+    </div>
+    <script>
+        fetch("/latest").then((resp) => {
+            return resp.json();
+        }).then((latest) => {
+            document.getElementById("lat").innerText = latest.dynamic.location.latitude;
+            document.getElementById("lng").innerText = latest.dynamic.location.longitude;
+            document.getElementById("alt").innerText = latest.dynamic.location.altitudeM;
+            document.getElementById("neighbours").innerText = latest.dynamic.network.neighbours.map((neighbour) => {
+                return `${neighbour["instance-id"]} (${neighbour["ipv4"]})`;
+            }).sort();
+        })
+    </script>
+</body>
+
+</html>
